@@ -1,0 +1,12 @@
+name: MinecraftDiscordConnector
+main: de.oryfox.MinecraftDiscordConnector
+version: 1.16.5
+commands:
+  setchannel:
+    usage: /setchannel <CHANNEL ID>
+    description: Sets the channel id to be listened and sent to
+    permission: mdconnector.set
+  settoken:
+    usage: /settoken <Discord Bot Token>
+    description: Sets the discord bot token to be used
+    permission: mdconnector.set
