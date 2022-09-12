@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.javacord.api.util.event.ListenerManager;
 
@@ -43,13 +44,14 @@ public class MinecraftDiscordConnector extends JavaPlugin {
         if (token != null && channelId != null) {
             System.out.printf("Trying to connect to channel with id %s...\n", channelId);
             discordApi = new DiscordApiBuilder().setToken(token).login().join();
-            listener = discordApi.getChannelById(channelId).orElseThrow(() -> new RuntimeException(String.format("Channel %s not found.", channelId)))
-                    .asServerTextChannel().orElseThrow(() -> new RuntimeException(String.format("Channel %s is not a server text channel.", channelId)))
-                    .addMessageCreateListener(evt -> {
+            var channel = discordApi.getChannelById(channelId).orElseThrow(() -> new RuntimeException(String.format("Channel %s not found.", channelId)))
+                    .asServerTextChannel().orElseThrow(() -> new RuntimeException(String.format("Channel %s is not a server text channel.", channelId)));
+            listener = channel.addMessageCreateListener(evt -> {
                         if (!evt.getMessageAuthor().isYourself()) {
                             Bukkit.broadcastMessage(String.format("<%s*>%s", evt.getMessageAuthor().getDisplayName(), evt.getMessage().getContent()));
                         }
                     });
+            channel.sendMessage("The Server is now online!");
             System.out.println("Successfully connected!");
             this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
         }
@@ -57,6 +59,7 @@ public class MinecraftDiscordConnector extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        discordApi.getChannelById(channelId).flatMap(Channel::asServerTextChannel).ifPresent(serverTextChannel -> serverTextChannel.sendMessage("The Server is now offline!").join());
         listener.remove();
         discordApi.disconnect().join();
     }
