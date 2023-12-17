@@ -6,6 +6,7 @@ As an Operator or from the server console use following commands
 ```
 /settoken <DISCORD_BOT_TOKEN>
 /setchannel <DISCORD_SERVER_TEXT_CHANNEL_ID>
+/remoteWhitelist <true/false>
 /reload
 ```
 The reload is necessary to initialize the Discord Bot

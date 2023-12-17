@@ -1,6 +1,7 @@
 name: MinecraftDiscordConnector
 main: de.oryfox.MinecraftDiscordConnector
-version: 1.16.5
+version: 1.1
+api-version: 1.20
 commands:
   setchannel:
     usage: /setchannel <CHANNEL ID>
@@ -9,4 +10,8 @@ commands:
   settoken:
     usage: /settoken <Discord Bot Token>
     description: Sets the discord bot token to be used
+    permission: mdconnector.set
+  remotewhitelist:
+    usage: /remotewhitelist <true/false>
+    description: Sets whether only whitelisted users can chat
     permission: mdconnector.set
